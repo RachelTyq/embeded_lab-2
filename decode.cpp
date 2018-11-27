@@ -24,26 +24,33 @@ int bin_to_dec(string str,int len)
 void decode_ldrstr(string a){}
 void decode_operate(string a)
 {
-
 	string opcode = a.substr(21,4);
 	string rn = a.substr(16,4);
 	string rd = a.substr(12, 4);
 	string op2 = a.substr(0,12);
 	int rnintex = bin_to_dec(rn, 4);
 	int rdintex = bin_to_dec(rd, 4);
+	bool intexn = true;
+	bool intexd = true;
 	if (opcode == "0000")
 		cout << "AND  ";
 	if (opcode == "0010")
 		cout << "ADD  ";
 	if (opcode == "0101")
+	{
 		cout << "CMP  ";
+		intexd = false;
+	}
 	if (opcode == "1011")
+	{
 		cout << "MOV  ";
+		intexn = false;
+	}
 	if (opcode == "0011")
 		cout << "ORR  ";
-	if (rdintex!=0)
+	if (intexd)
 	cout << "R" << rdintex << ",";
-	if (rnintex!=0)
+	if (intexn)
 	cout<<"R"<< rnintex << ",";
 	if (a[25] == '1')
 	{
@@ -64,12 +71,9 @@ void decode_mul(string a)
 	int rmintex = bin_to_dec(rm, 4);
 	int rdintex = bin_to_dec(rd, 4);
 	int rsintex = bin_to_dec(rs, 4);
-	if (rdintex != 0)
-		cout << "R" << rdintex << ",";
-	if (rmintex != 0)
-		cout << "R" << rmintex << ",";
-	if (rsintex != 0)
-		cout << "R" << rsintex ;
+	cout << "R" << rdintex << ",";
+	cout << "R" << rmintex << ",";
+	cout << "R" << rsintex ;
 }
 void decode_mrs(string a){}
 void decode_swi(string a){}
