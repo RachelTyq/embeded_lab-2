@@ -24,11 +24,13 @@ int bin_to_dec(string str,int len)
 void decode_ldrstr(string a){}
 void decode_operate(string a)
 {
- 	string opcode = a.substr(21,4);
+
+	string opcode = a.substr(21,4);
 	string rn = a.substr(16,4);
 	string rd = a.substr(12, 4);
 	string op2 = a.substr(0,12);
 	int rnintex = bin_to_dec(rn, 4);
+	int rdintex = bin_to_dec(rd, 4);
 	if (opcode == "0000")
 		cout << "AND  ";
 	if (opcode == "0010")
@@ -39,7 +41,8 @@ void decode_operate(string a)
 		cout << "MOV  ";
 	if (opcode == "0011")
 		cout << "ORR  ";
-	cout << "R" << bin_to_dec(rd, 4) << ",";
+	if (rdintex!=0)
+	cout << "R" << rdintex << ",";
 	if (rnintex!=0)
 	cout<<"R"<< rnintex << ",";
 	if (a[25] == '1')
@@ -50,6 +53,7 @@ void decode_operate(string a)
 	{
 		cout << "R" << bin_to_dec(op2, 12);
 	}
+	
 }
 void decode_mul(string a){}
 void decode_mrs(string a){}
