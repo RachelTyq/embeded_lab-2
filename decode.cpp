@@ -92,5 +92,6 @@ void openfiles()
 }
 int main()
 {
+  openfiles();
   return 0;
 }
