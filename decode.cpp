@@ -117,6 +117,27 @@ void decode_branche(string a){}
 void classification(string line)
 {
 	string a= invert_seq(line);
+	if (line.substr(4, 5) == "00010" && line.substr(10,6) == "001111" && line.substr(20,12) == "000000000000") {
+		decode_mrs(a);
+	}
+	else if(line.substr(4,4) == "1111"){
+		decode_swi(a);
+	}
+	else if (line.substr(4, 3) == "101") {
+		decode_branch(a);
+	}
+	else if (line.substr(4, 7) == "0000000" && line.substr(24, 4) == "1001") {
+		decode_mul(a);
+	}
+	else if (line.substr(4, 2) == "00") {
+		decode_operate(a);
+	}
+	else if (line.substr(4, 2) == "01") {
+		decode_mem_access(a);
+	}
+	else {
+		cout << "Fails!" << endl;
+	}
 }
 void openfiles()
 {
