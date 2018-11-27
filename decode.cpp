@@ -21,7 +21,43 @@ int bin_to_dec(string str,int len)
 	}
 	return output;
 }
-void decode_ldrstr(string a){}
+void decode_mem_access(string a)
+{
+	string rn = a.substr(16, 4);
+	string rd = a.substr(12, 4);
+	string addr = a.substr(0, 12);
+	int rnintex = bin_to_dec(rn, 4);
+	int rdintex = bin_to_dec(rd, 4);
+	int addrintex = bin_to_dec(addr, 12);
+	if (a[20] == '1')
+	{
+		cout << "LDR  ";
+	}
+	else
+	{
+		cout << "STR  ";
+	}
+	cout << "R" << rdintex << ",[";
+	cout << "R" << rnintex ;
+	if (a[24] == '0'){
+		cout << "]";
+	}
+
+	if (a[25] == '0')
+	{
+		cout << ",";
+		if (a[23] == '0')
+			cout << "-";
+		cout << "#" << addrintex;
+	}
+	else if (addrintex!=0)
+	{
+		cout << ",R" << addrintex;
+	}
+	if (a[24] == '1')
+		cout << "]";
+
+}
 void decode_operate(string a)
 {
 	string opcode = a.substr(21,4);
