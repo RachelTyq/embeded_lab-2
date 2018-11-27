@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 using namespace std;
-string inverted_seq(string a)
+string invert_seq(string a)
 {
   string opstr="";
 	for (int i = str.length()-1; i >= 0; i--)
@@ -55,11 +55,29 @@ void decode_operate(string a)
 	}
 	
 }
-void decode_mul(string a){}
+void decode_mul(string a)
+{
+	cout << "MUL  ";
+	string rd = a.substr(16, 4);
+	string rm = a.substr(0, 4);
+	string rs = a.substr(8, 4);
+	int rmintex = bin_to_dec(rm, 4);
+	int rdintex = bin_to_dec(rd, 4);
+	int rsintex = bin_to_dec(rs, 4);
+	if (rdintex != 0)
+		cout << "R" << rdintex << ",";
+	if (rmintex != 0)
+		cout << "R" << rmintex << ",";
+	if (rsintex != 0)
+		cout << "R" << rsintex ;
+}
 void decode_mrs(string a){}
 void decode_swi(string a){}
 void decode_branche(string a){}
-void classification(string line){}
+void classification(string line)
+{
+	string a= invert_seq(line);
+}
 void openfiles()
 {
   ifstream in("arm.txt");
