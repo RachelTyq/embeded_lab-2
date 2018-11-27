@@ -11,7 +11,7 @@ string inverted_seq(string a)
 	}
   return opstr;
 }
-int bin_to_dec(){string str,int len}
+int bin_to_dec(string str,int len)
 {
 	int output=0;
 	for (int i = 0; i < len; i++)
@@ -24,22 +24,11 @@ int bin_to_dec(){string str,int len}
 void decode_ldrstr(string a){}
 void decode_operate(string a)
 {
-  string opcode="";
-	string rn = "";
-	string rd = "";
-	string op2 = "";
-
-	for (int i = 0; i < 4;i++)
-	{
-		opcode += a[i + 21];
-		rn += a[i + 16];
-		rd += a[i + 12];
-	}
-	int rnintex = transcode(rn, 4);
-	for (int i = 0; i < 12; i++)
-	{
-		op2 += a[i];
-	}
+ 	string opcode = a.substr(21,4);
+	string rn = a.substr(16,4);
+	string rd = a.substr(12, 4);
+	string op2 = a.substr(0,12);
+	int rnintex = bin_to_dec(rn, 4);
 	if (opcode == "0000")
 		cout << "AND  ";
 	if (opcode == "0010")
@@ -50,16 +39,16 @@ void decode_operate(string a)
 		cout << "MOV  ";
 	if (opcode == "0011")
 		cout << "ORR  ";
-	cout << "R" << transcode(rd, 4) << ",";
+	cout << "R" << bin_to_dec(rd, 4) << ",";
 	if (rnintex!=0)
 	cout<<"R"<< rnintex << ",";
 	if (a[25] == '1')
 	{
-		cout << "#" << transcode(op2, 12);
+		cout << "#" << bin_to_dec(op2, 12);
 	}
 	else
 	{
-		cout << "R" << transcode(op2, 12);
+		cout << "R" << bin_to_dec(op2, 12);
 	}
 }
 void decode_mul(string a){}
