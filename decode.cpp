@@ -194,7 +194,7 @@ void decode_branch(string a)
 	}
 	else
 		cout << "BL  ";
-	cout << "#"<<label16;
+	cout << "#0x"<<label16;
 
 }
 void classification(string line)
