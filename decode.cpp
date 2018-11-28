@@ -5,6 +5,7 @@
 #include<fstream>
 #include <math.h>
 using namespace std;
+char hexstr[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 string invert_seq(string str)
 {
 	string opstr = "";
@@ -22,6 +23,26 @@ int bin_to_dec(string str, int len)
 		if (str[i] == '1')
 			output += pow(2, i);
 	}
+	return output;
+}
+string bin_to_HEX(string str, int len)
+{
+	int index = 0;
+	string output = "";
+	for (int i = 0; i < len ; i=i+4)
+	{
+		index = 0;
+		if (str[i]=='1')
+	    	index += pow(2, i);
+		if (str[i+1] == '1')
+			index += pow(2, i+1);
+		if (str[i+2] == '1')
+			index += pow(2, i+2);
+		if (str[i+3] == '1')
+			index += pow(2, i+3);
+		output += hexstr[index];
+	}
+	output = invert_seq(output);
 	return output;
 }
 void decode_mem_access(string a)
@@ -55,7 +76,10 @@ void decode_mem_access(string a)
 	}
 	else if (addrintex != 0)
 	{
-		cout << ",R" << addrintex;
+		cout << ",";
+		if (a[23] == '0')
+			cout << "-";
+		cout<<"R" << addrintex;
 	}
 	if (a[24] == '1')
 		cout << "]";
@@ -139,20 +163,38 @@ void decode_mrs(string a)
 	string rd=a.substr(12,4);
 	int rdintex = bin_to_dec(rd, 4);
 	cout << "MRS  ";
-	if (a[22] == 0)
-		cout << "CPSR,";
-	else
-		cout << "SPSR,";
 	if (rdintex != 15)
 	{
-		cout << "R" << rdintex;
+		cout << "R" << rdintex<<",";
 	}
 	else { cout << "false,Rd can not be PC!"; }
+	if (a[22] == '0')
+		cout << "CPSR";
+	else
+		cout << "SPSR";
+
 }
 void decode_swi(string a)
-{}
+{
+	string label = a.substr(0, 24);
+	int labelintex = bin_to_dec(label, 24);
+	string label16 = bin_to_HEX(label, 24);
+	cout << "SWI  ";
+	//cout  << label16;
+	cout << labelintex;
+}
 void decode_branch(string a)
 {
+	string label = a.substr(0, 24);
+	//int labelintex = bin_to_dec(label, 24);
+	string label16 = bin_to_HEX(label, 24);
+	if (a[24] == '0')
+	{
+		cout << "B  ";
+	}
+	else
+		cout << "BL  ";
+	cout << "#"<<label16;
 
 }
 void classification(string line)
