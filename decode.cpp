@@ -1,24 +1,26 @@
-#include <math.h>
+
+
 #include <iostream>
 #include <string>
 #include<fstream>
+#include <math.h>
 using namespace std;
-string invert_seq(string a)
+string invert_seq(string str)
 {
-  string opstr="";
-	for (int i = str.length()-1; i >= 0; i--)
+	string opstr = "";
+	for (int i = str.length() - 1; i >= 0; i--)
 	{
 		opstr += str[i];
 	}
-  return opstr;
+	return opstr;
 }
-int bin_to_dec(string str,int len)
+int bin_to_dec(string str, int len)
 {
-	int output=0;
+	int output = 0;
 	for (int i = 0; i < len; i++)
 	{
-		if (str[i]=='1')
-		output +=  pow(2, i);
+		if (str[i] == '1')
+			output += pow(2, i);
 	}
 	return output;
 }
@@ -39,19 +41,19 @@ void decode_mem_access(string a)
 		cout << "STR  ";
 	}
 	cout << "R" << rdintex << ",[";
-	cout << "R" << rnintex ;
+	cout << "R" << rnintex;
 	if (a[24] == '0'){
 		cout << "]";
 	}
 
-	if (a[25] == '0')
+	if (a[25] == '0'&&addrintex != 0)
 	{
 		cout << ",";
 		if (a[23] == '0')
 			cout << "-";
 		cout << "#" << addrintex;
 	}
-	else if (addrintex!=0)
+	else if (addrintex != 0)
 	{
 		cout << ",R" << addrintex;
 	}
@@ -61,12 +63,13 @@ void decode_mem_access(string a)
 }
 void decode_operate(string a)
 {
-	string opcode = a.substr(21,4);
-	string rn = a.substr(16,4);
+	string opcode = a.substr(21, 4);
+	string rn = a.substr(16, 4);
 	string rd = a.substr(12, 4);
-	string op2 = a.substr(0,12);
+	string op2 = a.substr(0, 12);
 	int rnintex = bin_to_dec(rn, 4);
 	int rdintex = bin_to_dec(rd, 4);
+	int op2intex = bin_to_dec(op2, 12);
 	bool intexn = true;
 	bool intexd = true;
 	if (opcode == "0000")
@@ -86,18 +89,37 @@ void decode_operate(string a)
 	if (opcode == "0011")
 		cout << "ORR  ";
 	if (intexd)
-	cout << "R" << rdintex << ",";
+	{
+		if (rdintex==14)
+			cout << "LR"<< ",";
+		else if (rdintex==15)
+			cout << "PC" << ",";
+		else
+		cout << "R" << rdintex << ",";
+	}
 	if (intexn)
-	cout<<"R"<< rnintex << ",";
+	{
+		if (rnintex == 14)
+			cout << "LR" << ",";
+		else if (rnintex == 15)
+			cout << "PC" << ",";
+		else
+		cout << "R" << rnintex << ",";
+	}
 	if (a[25] == '1')
 	{
-		cout << "#" << bin_to_dec(op2, 12);
+		cout << "#" << op2intex;
 	}
 	else
 	{
-		cout << "R" << bin_to_dec(op2, 12);
+		if (op2intex == 14)
+			cout << "LR" ;
+		else if (op2intex == 15)
+			cout << "PC" ;
+		else
+		cout << "R" << op2intex;
 	}
-	
+
 }
 void decode_mul(string a)
 {
@@ -110,18 +132,23 @@ void decode_mul(string a)
 	int rsintex = bin_to_dec(rs, 4);
 	cout << "R" << rdintex << ",";
 	cout << "R" << rmintex << ",";
-	cout << "R" << rsintex ;
+	cout << "R" << rsintex;
 }
-void decode_mrs(string a){}
-void decode_swi(string a){}
-void decode_branche(string a){}
+void decode_mrs(string a)
+{}
+void decode_swi(string a)
+{}
+void decode_branch(string a)
+{
+
+}
 void classification(string line)
 {
-	string a= invert_seq(line);
-	if (line.substr(4, 5) == "00010" && line.substr(10,6) == "001111" && line.substr(20,12) == "000000000000") {
+	string a = invert_seq(line);
+	if (line.substr(4, 5) == "00010" && line.substr(10, 6) == "001111" && line.substr(20, 12) == "000000000000") {
 		decode_mrs(a);
 	}
-	else if(line.substr(4,4) == "1111"){
+	else if (line.substr(4, 4) == "1111"){
 		decode_swi(a);
 	}
 	else if (line.substr(4, 3) == "101") {
@@ -142,7 +169,7 @@ void classification(string line)
 }
 void openfiles()
 {
-  ifstream in("arm.txt");
+	ifstream in("arm.txt");
 	string str;
 	while (!in.eof())
 	{
@@ -154,6 +181,6 @@ void openfiles()
 }
 int main()
 {
-  openfiles();
-  return 0;
+	openfiles();
+	return 0;
 }
