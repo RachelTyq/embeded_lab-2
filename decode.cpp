@@ -1,6 +1,7 @@
 #include <math.h>
 #include <iostream>
 #include <string>
+#include<fstream>
 using namespace std;
 string invert_seq(string a)
 {
