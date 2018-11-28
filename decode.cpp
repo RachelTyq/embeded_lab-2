@@ -135,7 +135,20 @@ void decode_mul(string a)
 	cout << "R" << rsintex;
 }
 void decode_mrs(string a)
-{}
+{
+	string rd=a.substr(12,4);
+	int rdintex = bin_to_dec(rd, 4);
+	cout << "MRS  ";
+	if (a[22] == 0)
+		cout << "CPSR,";
+	else
+		cout << "SPSR,";
+	if (rdintex != 15)
+	{
+		cout << "R" << rdintex;
+	}
+	else { cout << "false,Rd can not be PC!"; }
+}
 void decode_swi(string a)
 {}
 void decode_branch(string a)
